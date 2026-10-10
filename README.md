@@ -1,29 +1,52 @@
 # Portal de Talentos y Aprendizaje
 
-**Evaluación open source de aptitudes y estilos de aprendizaje** para jóvenes de 10 a 15 años.
+> **Evaluación open source de aptitudes y estilos de aprendizaje** para jóvenes de 10 a 15 años. Descubre fortalezas, explora caminos vocacionales y encuentra formas de aprender que funcionan para cada estudiante.
 
-Esta es una **copia independiente** de la aplicación Portal Talentos, preparada para publicarse como proyecto open source. Está pensada para que **cualquier persona** instale y ejecute la aplicación usando **su propio proyecto Firebase**.
+[![versión](https://img.shields.io/badge/version-0.1.0-blue)][release]
+[![licencia](https://img.shields.io/badge/licencia-MIT-green)][license]
+[![React](https://img.shields.io/badge/React-19-61DAFB)](#)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](#)
+[![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%2B%20Auth-FFCA28)](#)
 
-> ⚠️ **Aviso importante:** esta distribución **no está conectada** a ningún Firebase de producción. No contiene datos reales de estudiantes ni credenciales. Todo el backend es configurado por cada usuario con sus propias credenciales.
+Portal de Talentos es una herramienta de orientación personal y vocacional que combina dos **evaluaciones breves** con un motor de puntuación propio:
+
+- **Habilidades y aptitudes** — 25 preguntas · 8–12 minutos. Detecta áreas lógicas, creativas, de liderazgo, sociales y prácticas.
+- **Estilo de aprendizaje VAK** — 10 preguntas · 4–6 minutos. Identifica si el aprendizaje es visual, auditivo o kinestésico.
+
+Los resultados generan **perfiles personalizados** con sugerencias de carreras, planes de estudio y actividades de prueba.
+
+> ⚠️ **Aviso importante:** esta distribución **no está conectada** a ningún Firebase de producción y no contiene datos reales. Cada usuario configura la aplicación con **su propio proyecto Firebase**.
 
 ---
 
-## ¿Qué es Portal Talentos?
+## Capturas
 
-Portal de Talentos es una herramienta de orientación personal y vocacional que descubre fortalezas, explora caminos vocacionales e identifica estrategias de aprendizaje para cada estudiante. Incluye dos evaluaciones breves:
+| Inicio | Cuestionario de aptitudes |
+|--------|---------------------------|
+| <img src="docs/screenshots/home.png" alt="Pantalla principal" width="320"/> | <img src="docs/screenshots/quiz-aptitudes.png" alt="Cuestionario de aptitudes" width="320"/> |
 
-- **Habilidades y aptitudes** — 25 preguntas · 8–12 minutos. Detecta áreas de fortalecimiento lógico, creativo, de liderazgo, social y práctico.
-- **Estilo de aprendizaje VAK** — 10 preguntas · 4–6 minutos. Identifica si el aprendizaje es visual, auditivo o kinestésico.
+| Cuestionario VAK | Resultados |
+|------------------|------------|
+| <img src="docs/screenshots/quiz-vak.png" alt="Cuestionario VAK" width="320"/> | <img src="docs/screenshots/results.png" alt="Resultados" width="320"/> |
 
-Los resultados generan perfiles personalizados con sugerencias de carreras, planes de estudio y actividades de prueba.
+| Registro del participante | Panel de administración |
+|---------------------------|-------------------------|
+| <img src="docs/screenshots/registration.png" alt="Registro" width="320"/> | <img src="docs/screenshots/admin.png" alt="Panel de administración" width="320"/> |
+
+> Capturas generadas con datos ficticios contra el **emulador local**. No contienen información personal real.
+
+[release]: https://github.com/matiasgonzalovq/portal-talentos/releases/tag/v0.1.0
+[license]: ./LICENSE
+
+---
 
 ## Funcionalidades
 
-- Registro de participante (nombre, edad, grupo, contacto opcional) y código de recuperación de 4 dígitos.
-- Dos evaluaciones (aptitudes y VAK) con motor de puntuación `scoreTest`.
+- **Dos evaluaciones** (aptitudes y VAK) con motor de puntuación `scoreTest`.
+- Registro de participante (nombre, edad, grupo, contacto opcional) y **código de recuperación** de 4 dígitos.
 - Almacenamiento de resultados en Firestore bajo `participants/{id}/submissions/{testType}`.
 - Consulta de resultados por código de acceso.
-- Panel de administración (dashboard): lista de participantes, respuestas, informes y exportación CSV.
+- Panel de administración (dashboard): lista de participantes, respuestas, informes y **exportación CSV**.
 - Gestión de administradores mediante **custom claims** (`admin` y `superAdmin`) — **el correo electrónico no es criterio de autorización**.
 
 ## Arquitectura
@@ -185,6 +208,12 @@ El **test VAK** (visual, auditivo, kinestésico) es una **herramienta explorator
 - **No reemplazan** una evaluación psicológica, clínica o vocacional profesional.
 - **No** deben usarse para etiquetar, limitar o excluir a un estudiante.
 - Son un punto de partida para explorar estrategias de aprendizaje, no una verdad fija sobre la persona.
+
+## Roadmap y versionado
+
+Consulta [ROADMAP.md](./ROADMAP.md) para las líneas de trabajo planificadas: ampliación de la batería de evaluaciones, formato reutilizable de preguntas, constructor visual, gestión de organizaciones, informes, biblioteca comunitaria, IA opcional y privacidad/validación.
+
+Versión publicada: **v0.1.0** ([ver release](https://github.com/matiasgonzalovq/portal-talentos/releases/tag/v0.1.0)).
 
 ## Licencia
 
