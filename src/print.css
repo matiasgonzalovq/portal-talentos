@@ -1,0 +1,75 @@
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background: #fff !important; }
+  body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  main { min-height: 0 !important; }
+  header, footer, .secondary, .other-test, .text-button, .back,
+  .dash-head .secondary, .modal-close, .delete-record-button,
+  .admin-management { display: none !important; }
+
+  /* Al imprimir un informe desde Administración, elimina el dashboard de atrás. */
+  .dashboard:has(> .modal-back) > :not(.modal-back) { display: none !important; }
+  .dashboard:has(> .modal-back) { max-width: none !important; padding: 0 !important; }
+  .modal-back {
+    position: static !important;
+    inset: auto !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  .modal {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    border-radius: 0 !important;
+  }
+
+  .results { max-width: none !important; padding: 0 !important; }
+  .result-top { align-items: flex-start !important; }
+  .result-top h1 { font-size: 30px !important; margin: 5px 0 14px !important; }
+  .code-box { padding: 13px 17px !important; margin-bottom: 14px !important; }
+
+  /* El informe sí debe fluir entre páginas. Solo se protegen piezas pequeñas. */
+  .result-card {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  .result-title, .result-summary, .score-grid > div, .profile-copy > div,
+  .section-heading, .next-steps, .orientation-note, .code-box {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  .result-summary { margin: 14px 0 !important; padding: 13px 15px !important; }
+  .score-grid { gap: 8px !important; margin: 16px 0 !important; }
+  .profile-copy h3 { margin-top: 14px !important; }
+  .guidance { margin-top: 20px !important; padding-top: 18px !important; }
+
+  /* Dos columnas compactas permiten que la orientación cierre en la misma página. */
+  .career-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    align-items: start !important;
+    gap: 10px !important;
+  }
+  .career-grid > article {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .career-grid p, .career-grid ul, .career-grid ol { font-size: 12px !important; line-height: 1.4 !important; }
+  .career-grid h4 { margin: 11px 0 5px !important; }
+  .career-grid li + li { margin-top: 3px !important; }
+  .career-grid h4 { break-after: avoid; page-break-after: avoid; }
+  .next-steps { margin-top: 10px !important; padding: 16px !important; }
+  .orientation-note { margin: 12px 0 !important; padding: 13px !important; }
+  details { display: none !important; }
+  .modal-actions { display: none !important; }
+}

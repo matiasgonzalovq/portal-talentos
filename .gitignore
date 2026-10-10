@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+*.tsbuildinfo
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+
+# testing
+playwright-report/
+test-results/
+coverage/
+
+# env files (never commit real credentials)
+.env
+.env.local
+.env.*.local
+
+# OS / editor
+.DS_Store
+
+# backups / temporary
+*.bak
+*.log

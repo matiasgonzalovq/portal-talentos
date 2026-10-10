@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  // Portable admin authorization using custom claims "admin" set on the user token.
+  // This avoids hardcoding email addresses, making the project portable
+  // across different Firebase projects and environments.
+  //
+  // IMPORTANT: Do NOT simplify these rules to `request.auth != null` as that
+  // would grant write access to all authenticated users, violating minimum
+  // privilege. Always restrict admin write access to explicit roles/UIDs.
+
+  function isAdmin() {
+    // Approach: Custom token claim "admin" set by Firebase Admin SDK.
+    // When using Firebase Auth + Admin SDK, you can set:
+    //   const user = await getUser(uid);
+    //   customClaims = user.customClaims || {};
+    //   return customClaims.admin === true;
+    //
+    // For this project, we use: admins must have customClaim: { admin: true }
+    // set on their token via the Firebase Admin Console or Admin SDK.
+    return request.auth != null && request.auth.token.admin == true;
+  }
+
+  // Super-administrator: requires BOTH claims. Used only for operations the
+  // application reserves for superAdmin (management of admins and irreversible
+  // deletions). Requires admin:true (so it implies admin) AND superAdmin:true.
+  function isSuperAdmin() {
+    return request.auth != null
+      && request.auth.token.admin == true
+      && request.auth.token.superAdmin == true;
+  }
+
+  match /databases/{database}/documents {
+    match /participants/{participantId} {
+      // Create: valid structure only (no auth required to create, data validation)
+      allow create: if participantId.size() == 20
+        && request.resource.data.keys().hasOnly(['name','age','phone','email','group','recoveryCode','createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 100
+        && request.resource.data.age is int && request.resource.data.age >= 1 && request.resource.data.age <= 120
+        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
+        && request.resource.data.email is string && request.resource.data.email.size() <= 150
+        && request.resource.data.group is string && request.resource.data.group.size() >= 2 && request.resource.data.group.size() <= 60
+        && request.resource.data.recoveryCode is string && request.resource.data.recoveryCode.size() == 4;
+
+      // Read: solo usuarios con claim admin (no hay lecturas públicas)
+      allow get, list: if isAdmin();
+
+      // Update: denegado por defecto (ningún usuario puede modificar submissions parciais)
+      allow update: if false;
+
+      // Delete: solo superAdmin (eliminación irreversible de registros)
+      allow delete: if isSuperAdmin();
+
+      match /submissions/{testType} {
+        // Create: solo usuarios autenticados con test completado
+        allow create: if (testType == 'aptitudes' || testType == 'vak')
+          && exists(/databases/$(database)/documents/participants/$(participantId))
+          && request.resource.data.keys().hasOnly(['testType','answers','scores','dominant','completedAt'])
+          && request.resource.data.testType == testType
+          && request.resource.data.answers is map && request.resource.data.scores is map
+          && request.resource.data.dominant is string
+          && request.auth != null;
+
+        // Read: solo admin (prohibir acceso público a respuestas y datos personales)
+        allow get, list: if isAdmin();
+
+        // Update: denegado por defecto
+        allow update: if false;
+
+        // Delete: solo superAdmin (borrado de respuestas, irreversible)
+        allow delete: if isSuperAdmin();
+      }
+    }
+
+    match /resultAccess/{accessHash} {
+      // Create: valid structure (mantenemos lo existente)
+      allow create: if accessHash.size() == 64
+        && request.resource.data.keys().hasOnly(['participantId','createdAt'])
+        && request.resource.data.participantId is string
+        && request.resource.data.participantId.size() == 20;
+
+      // Read: solo admin (evitar exposición de respuestas y datos personales a usuarios normales)
+      allow get: if isAdmin();
+
+      // List, update: denegado por defecto
+      allow list, update: if false;
+
+      // Delete: solo superAdmin (alineado con la eliminación de registros)
+      allow delete: if isSuperAdmin();
+    }
+
+    match /admins/{uid} {
+      // Read: solo admin
+      allow read: if isAdmin();
+
+      // Create, update, delete: solo superAdmin (gestión de administradores
+      // reservada al superadministrador; no autoasignación de roles)
+      allow create, update, delete: if isSuperAdmin();
+    }
+  }
+}
